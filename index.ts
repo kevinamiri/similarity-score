@@ -105,7 +105,7 @@ export const handler: Handler = async (
   console.log(results);
 
   const data = await weaviateFetch_Projection("a", className);
-  const outputs = data.Questions1.map((x) => ({
+  const outputs = data.[`${className}`].map((x) => ({
     _additional: x._additional,
     content: x.content,
   }));
