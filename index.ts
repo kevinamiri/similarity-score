@@ -70,7 +70,7 @@ export const weaviateFetch_Projection = async (
         `,
       }),
     });
-    const data = await response.json();
+    const data: any = await response.json();
     console.log(data);
     return data.data.Get;
   } catch (error) {
