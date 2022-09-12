@@ -32,8 +32,47 @@ export const weaviateBatchObject = async (wobjects: any[]) => {
       body: JSON.stringify(classes),
     });
     const data = await response.json();
-    console.log(data);
     return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const weaviateFetch_Projection = async (
+  searchQuery: string,
+  className: string
+) => {
+  const url = `https://vector.fzserver.com:8890/v1/graphql`;
+  const arr: string = `["${searchQuery}"]`;
+  console.log(arr);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
+          Get {
+            ${className} (nearText: {
+              concepts: ["${searchQuery}"],
+              distance: 0.99,
+            }
+            limit:100,
+            ) {
+              content
+              _additional { distance, certainty, id, featureProjection(dimensions: 2) {
+                      vector
+                    } }
+            }
+          }
+        }
+        `,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data.data.Get;
   } catch (error) {
     console.log(error);
   }
@@ -53,6 +92,9 @@ export const handler: Handler = async (
   const email = useremail;
   const contents = bodyEvent.content;
   const className = bodyEvent.className;
+  const searchQuery = bodyEvent.searchQuery;
+  const requestType =
+    (bodyEvent.requestType && bodyEvent.requestType) || "index";
 
   const listToweaviateObject = Object.values(contents).map((x) =>
     weaviateObjectify(removeNewLine(x), className)
@@ -61,12 +103,26 @@ export const handler: Handler = async (
 
   const results = vectors.map((x) => x.result);
 
+  const data = await weaviateFetch_Projection("a", "Questions1");
+  const outputs = data.Questions1.map((x) => ({
+    _additional: x._additional,
+    content: x.content,
+  }));
+  const featureProjection = outputs.map((x) => ({
+    p: {
+      x: x._additional.featureProjection.vector[0],
+      y: x._additional.featureProjection.vector[1],
+    },
+    a: x._additional.featureProjection.vector,
+    c: x.content,
+  }));
+
   return {
     statusCode: 200,
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
     },
-    body: JSON.stringify(results),
+    body: JSON.stringify(featureProjection),
   };
 };
