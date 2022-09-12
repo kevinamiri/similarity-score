@@ -86,10 +86,10 @@ export const handler: Handler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResultV2> => {
   let requestContexts = event.requestContext.authorizer;
-  const user = requestContexts.claims.sub;
-  const useremail = requestContexts.claims.email;
+  // const user = requestContexts.claims.sub;
+  // const useremail = requestContexts.claims.email;
   let bodyEvent = JSON.parse(event.body);
-  const email = useremail;
+  // const email = useremail;
   const contents = bodyEvent.contents;
   const className = bodyEvent.className;
   const searchQuery = bodyEvent.searchQuery;
