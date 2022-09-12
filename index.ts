@@ -105,10 +105,11 @@ export const handler: Handler = async (
   console.log(results);
 
   const data = await weaviateFetch_Projection("a", className);
-  const outputs = data.[`${className}`].map((x) => ({
+  const outputs = data.Text.map((x) => ({
     _additional: x._additional,
     content: x.content,
   }));
+  console.log(outputs);
   const featureProjection = outputs.map((x) => ({
     p: {
       x: x._additional.featureProjection.vector[0],
