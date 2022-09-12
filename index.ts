@@ -100,8 +100,9 @@ export const handler: Handler = async (
     weaviateObjectify(removeNewLine(x), className)
   );
   const vectors: any = await weaviateBatchObject(listToweaviateObject);
-
+  console.log("vectors", vectors);
   const results = vectors.map((x) => x.result);
+  console.log(results);
 
   const data = await weaviateFetch_Projection("a", className);
   const outputs = data.Questions1.map((x) => ({
