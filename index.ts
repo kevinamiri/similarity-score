@@ -118,6 +118,11 @@ export const handler: Handler = async (
     c: x.content,
   }));
 
+  //Pythagorean theorem to find the distance between any two points.
+  const distance = (a, b) => {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  };
+
   return {
     statusCode: 200,
     headers: {
