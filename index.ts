@@ -15,7 +15,7 @@ export const weaviateObjectify = (content: string, className: string) => {
 };
 
 export const weaviateBatchObject = async (wobjects: any[]) => {
-  const url = `https://vector.fzserver.com:8890/v1/batch/objects`;
+  const url = `https://search.hostdu.com/sbert/v1/batch/objects`;
   try {
     const classes = {
       objects: wobjects,
